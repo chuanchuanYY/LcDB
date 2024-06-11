@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "P5CB2DeMdz4VusYJCF08erqNxm4/iHOJSKkfFlDCCuNyV9q3G4ZQMlrzpAOwOoUj4wvrlomLGpGKOpDq0pY05w==",
+  "success": true,
+  "projectFilePath": "D:\\New_D_Net\\编程项目\\KVProject-C#\\LcDB\\LcDB.Core\\LcDB.Core.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Administrator\\.nuget\\packages\\friendlycsharp.databases\\2.0.4\\friendlycsharp.databases.2.0.4.nupkg.sha512"
+  ],
+  "logs": []
+}
