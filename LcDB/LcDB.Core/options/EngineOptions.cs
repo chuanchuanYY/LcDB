@@ -13,7 +13,7 @@ public enum IndexerType {
 public class EngineOptions
 {
     public string DataDir { get; set; }
-    public UInt64 MaxFileSize { get; set; }
+    public uint MaxFileSize { get; set; }
 
     public IndexerType IndexerType { get; set; }
 

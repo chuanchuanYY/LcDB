@@ -1,4 +1,5 @@
-spend 3648 mskey = bbb2999900  Value = bitcast-kv2999900
+读 300_0000条记录耗时： 3387 ms
+key = bbb2999900  Value = bitcast-kv2999900
 key = bbb2999901  Value = bitcast-kv2999901
 key = bbb2999902  Value = bitcast-kv2999902
 key = bbb2999903  Value = bitcast-kv2999903

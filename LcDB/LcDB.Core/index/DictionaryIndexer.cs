@@ -1,85 +1,92 @@
-﻿using System;
+﻿using LcDB.Core.data;
+using System;
+using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection.Metadata.Ecma335;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LcDB.Core.index
+namespace LcDB.Core.index;
+// 数据库插入，启动慢是索引器的问题，
+// 索引器的问题是在比较器上
+
+public class DictionaryIndexer : IndexerInterface
 {
-    public class DictionaryIndexer : IndexerInterface
+    public DictionaryIndexer()
     {
-        public DictionaryIndexer()
-        {
-            _index = new ConcurrentDictionary<byte[], byte[]>(new BytesCompare());
-        }
-        private ConcurrentDictionary<byte[], byte[]> _index;
-        public bool Delete(Span<byte> key)
-        {
-            if (key.Length <= 0)
-            {
-                throw new ArgumentNullException(nameof(key));
-            }
-            return _index.Remove(key.ToArray(),out byte[]? value);
-        }
-
-        public Span<byte> Get(Span<byte> key)
-        {
-            if (key.Length <= 0)
-            {
-                throw new ArgumentNullException(nameof(key));
-            }
-            var ok =_index.
-                TryGetValue(key.ToArray(),out byte[]? value);
-
-            if (!ok) 
-            {
-                return Span<byte>.Empty;
-            }
-
-            return value;
-        }
-
-        public bool Put(Span<byte> key, Span<byte> value)
-        {
-            if (key.Length <= 0)
-            {
-                throw new ArgumentNullException(nameof(key));
-            }
-
-            return _index.TryAdd(key.ToArray(),value.ToArray());
-        }
+        _index = new ConcurrentDictionary<byte[],LogRecordPos>(new BytesCompare());
     }
 
-    internal class BytesCompare : EqualityComparer<byte[]?>
+    private ConcurrentDictionary<byte[], LogRecordPos> _index;
+
+    public bool Delete(byte[] key)
     {
-        public override bool Equals(byte[]? x, byte[]? y)
+        if (key.Length <= 0)
         {
-            if (x == null || y == null || x.Length != y.Length)
-            {
-                return false;
-            }
-            for (int i = 0; i < x.Length; i++)
-            {
-                if (x[i] != y[i])
-                {
-                    return false;
-                }
-            }
-            return true;
+            throw new ArgumentNullException(nameof(key));
         }
-        public override int GetHashCode([DisallowNull] byte[]? obj)
+        return _index.Remove(key,out LogRecordPos? value);
+    }
+
+    public LogRecordPos? Get(byte[] key)
+    {
+        if (key.Length <= 0)
         {
-            if (obj == null || obj.Length<= 0)
-                return 0;
-            int reuslt = obj[0];
-            for (int i = 1; i < obj.Length; i++)
-            {
-                reuslt ^= obj[i];
-            }
-            return reuslt;
+            throw new ArgumentNullException(nameof(key));
         }
+        var ok =_index. TryGetValue(key,out LogRecordPos? value);
+
+        if (!ok) 
+        {
+            return null;
+        }
+        return value;
+    }
+
+    public bool Put(byte[] key,LogRecordPos value)
+    {
+        if (key == null || key== null || key.Length <= 0)
+        {
+            throw new ArgumentNullException(nameof(key));
+        }
+        return _index.TryAdd(key,value);
+    }
+}
+
+public class BytesCompare : IEqualityComparer<byte[]>
+{
+    //public override bool Equals(byte[]? x, byte[]? y)
+    //{
+    //    //if (x == null || y == null || x.Length != y.Length)
+    //    //{
+    //    //    return false;
+    //    //}
+    //    //for (int i = 0; i < x.Length; i++)
+    //    //{
+    //    //    if (x[i] != y[i])
+    //    //    {
+    //    //        return false;
+    //    //    }
+    //    //}
+    //    //return true;
+
+    //    return StructuralComparisons.StructuralEqualityComparer.Equals(x,y);
+    //}
+    //public override int GetHashCode([DisallowNull] byte[]? obj)
+    //{
+    //    return StructuralComparisons.StructuralEqualityComparer.GetHashCode(obj);
+    //}
+    public bool Equals(byte[]? x, byte[]? y)
+    {
+        return StructuralComparisons.StructuralEqualityComparer.Equals(x,y);
+    }
+
+    public int GetHashCode([DisallowNull] byte[] obj)
+    {
+        return StructuralComparisons.StructuralEqualityComparer.GetHashCode(obj);
     }
 }

@@ -29,7 +29,7 @@ namespace Tests.data
                 Key = key1,
                 Value = value1,
             };
-            var encode1 = record1.ToBytesSpan();
+            var encode1 = record1.ToBytes();
             encode1.Dump();
 
             // 测试解码
@@ -63,7 +63,7 @@ namespace Tests.data
                 Key = key2,
                 Value = value2,
             };
-            var encode2 = record2.ToBytesSpan();
+            var encode2 = record2.ToBytes();
             encode2.Dump();
 
             // 测试解码
@@ -85,8 +85,6 @@ namespace Tests.data
             }
             Assert.IsTrue(decode_record2.Crc == record2.Crc);
         }
-
        
-
     }
 }

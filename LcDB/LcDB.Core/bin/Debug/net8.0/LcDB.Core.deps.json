@@ -7,8 +7,19 @@
   "targets": {
     ".NETCoreApp,Version=v8.0": {
       "LcDB.Core/1.0.0": {
+        "dependencies": {
+          "FriendlyCSharp.Databases": "2.0.4"
+        },
         "runtime": {
           "LcDB.Core.dll": {}
+        }
+      },
+      "FriendlyCSharp.Databases/2.0.4": {
+        "runtime": {
+          "lib/netstandard2.0/FriendlyCSharp.Databases.dll": {
+            "assemblyVersion": "2.0.4.0",
+            "fileVersion": "2.0.4.0"
+          }
         }
       }
     }
@@ -18,6 +29,13 @@
       "type": "project",
       "serviceable": false,
       "sha512": ""
+    },
+    "FriendlyCSharp.Databases/2.0.4": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-wzqvSBDfnVFj0K57S0lzlVHGqBbglrzxuuf3E2YbDGQv4AV+HRSAqP0xkNR9+j8Yx8yvOk/0c0nqEs+O8XkNnA==",
+      "path": "friendlycsharp.databases/2.0.4",
+      "hashPath": "friendlycsharp.databases.2.0.4.nupkg.sha512"
     }
   }
 }

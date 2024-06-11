@@ -32,9 +32,9 @@ public class LogRecord
     /// +-----------+-----------+-----------+-----------+-----------+-----------+
     /// |  type     | KeySize   | ValueSize | key       | size      | crc       |
     /// +-----------+-----------+-----------+-----------+-----------+-----------+
-    public LogRecord(Span<byte> from)
+    public LogRecord(byte[] from)
     {
-        if (from == null || from.IsEmpty || from.Length < GetLogRecordSize())
+        if (from == null || from.Length <= 0 || from.Length < GetLogRecordSize())
         {
             throw new ArgumentException("from is null or empty or not enough length");
         }
@@ -47,21 +47,21 @@ public class LogRecord
                 this.Type = LogRecordType.DELETED;
                 break;
         };
-
-        KeySize = BitConverter.ToUInt32(from.Slice(1,4));
-        ValueSize = BitConverter.ToUInt32(from.Slice(5,4));
-        Key = from.Slice(9,(int)KeySize).ToArray();
-        Value = from.Slice(9+(int)KeySize, (int)ValueSize).ToArray();
-        Crc = BitConverter.ToUInt32(from.Slice(9+ (int)KeySize+ (int)ValueSize,4));
+        Span<byte> from_span = from;
+        KeySize = BitConverter.ToUInt32(from_span.Slice(1,4));
+        ValueSize = BitConverter.ToUInt32(from_span.Slice(5,4));
+        Key = from_span.Slice(9,(int)KeySize).ToArray();
+        Value = from_span.Slice(9+(int)KeySize, (int)ValueSize).ToArray();
+        Crc = BitConverter.ToUInt32(from_span.Slice(9+ (int)KeySize+ (int)ValueSize,4));
     }
     public static int GetHeadSize()
     {
         return 1 + 4 + 4;
     }
-    public Span<byte> ToBytesSpan()
+    public byte[] ToBytes()
     {
         var size = GetLogRecordSize();
-        var span = new Span<byte>(new byte[size]);
+        var span = new byte[size];
         int offset = 0;
         AppendToSpan(span, ref offset, new byte[] { (byte)Type });
         AppendToSpan(span, ref offset, BitConverter.GetBytes(KeySize));
@@ -77,13 +77,13 @@ public class LogRecord
         var size = GetHeadSize() + KeySize + ValueSize + 4;
         return size;
     }
-    private void AppendToSpan(Span<byte> span, ref int offset, byte[] value)
+    private void AppendToSpan(byte[] buffer, ref int offset, byte[] value)
     {
         int i = offset;
         int j = 0;
         for (; i < offset + value.Length; i++, j++)
         {
-            span[i] = value[j];
+            buffer[i] = value[j];
         }
         offset = i;
     }

@@ -9,3 +9,4 @@ D:\New_D_Net\编程项目\KVProject-C#\LcDB\LcDB.Core\obj\Debug\net8.0\LcDB.Core
 D:\New_D_Net\编程项目\KVProject-C#\LcDB\LcDB.Core\obj\Debug\net8.0\refint\LcDB.Core.dll
 D:\New_D_Net\编程项目\KVProject-C#\LcDB\LcDB.Core\obj\Debug\net8.0\LcDB.Core.pdb
 D:\New_D_Net\编程项目\KVProject-C#\LcDB\LcDB.Core\obj\Debug\net8.0\ref\LcDB.Core.dll
+D:\New_D_Net\编程项目\KVProject-C#\LcDB\LcDB.Core\obj\Debug\net8.0\LcDB.Core.csproj.AssemblyReference.cache

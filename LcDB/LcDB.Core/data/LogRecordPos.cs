@@ -15,9 +15,7 @@ namespace LcDB.Core.data
         /// <summary>
         /// LogRecord 的偏移量 ，表示该在文件中的起始位置
         /// </summary>
-        public UInt64 Offset { get; set; }
-
-
+        public uint Offset { get; set; }
 
 
         public LogRecordPos()
@@ -27,29 +25,25 @@ namespace LcDB.Core.data
 
         public LogRecordPos(Span<byte> from)
         {
-            //if (from.Length < 4 + 8)
-            //{
-            //    throw new ArgumentException("length too small");
-            //}
             FileID = BitConverter.ToUInt32(from.Slice(0,4));
-            Offset = BitConverter.ToUInt64(from.Slice(4, 8));
+            Offset = BitConverter.ToUInt32(from.Slice(4,4));
         }
         public byte[] ToBytes() {
 
-            var result = new Span<byte>(new byte[sizeof(uint)+sizeof(UInt64)]);
+            var result = new byte[4 + 4];
             var offset = 0;
             AppendToSpan(result, ref offset, BitConverter.GetBytes(FileID));
             AppendToSpan(result,ref offset,BitConverter.GetBytes(Offset));
-            return result.ToArray();
+            return result;
         }
 
-        private void AppendToSpan(Span<byte> span, ref int offset, byte[] value)
+        private void AppendToSpan(byte[] buffer, ref int offset, byte[] value)
         {
             int i = offset;
             int j = 0;
             for (; i < offset + value.Length; i++, j++)
             {
-                span[i] = value[j];
+                buffer[i] = value[j];
             }
             offset = i;
         }

@@ -46,16 +46,15 @@ public class Engine : IDisposable
 
         // 获取所有的数据文件
         var datafiles = Directory.EnumerateFiles(dir)
-                                 .Select(f=> Path.GetFileName(f).Split('.')[0])
+                                 .Select(f => uint.Parse(Path.GetFileName(f).Split('.')[0]))
                                  .Order()
-                                 .Select(f =>
+                                 .Select(f_id =>
                                  {
                                      var option = new DataFileOptions()
                                      {
                                          DirPath = dir,
                                      };
-                                     var file_id = Path.GetFileName(f).Split('.')[0];
-                                     return new DataFile(option, uint.Parse(file_id));
+                                     return new DataFile(option, f_id);
                                  })
                                  .ToList();
 
@@ -73,8 +72,8 @@ public class Engine : IDisposable
         else 
         {
             // 获取id最大的作为 当前活跃文件
-        _activeFile = datafiles.TakeLast(1).First();
-        datafiles.Remove(_activeFile);
+             _activeFile = datafiles.TakeLast(1).First();
+            datafiles.Remove(_activeFile);
         }
         
 
@@ -96,42 +95,39 @@ public class Engine : IDisposable
         uint offset = 0;
         while (true)
         {
-            var record_bytes = dataFile.ReadLogRecord(offset);
-            if (record_bytes.IsEmpty)
+            var record = dataFile.ReadLogRecord(ref offset);
+            if (record == null)
             {
-                break;
+                break; // 读取完文件了
             }
-
-            // 解码 将字节数组 解析为 记录 LogRecord
-            var record = new LogRecord(record_bytes);
             var record_pos = new LogRecordPos
             {
                 FileID = dataFile.GetFileId(),
                 Offset = offset,
             };
-            _indexer.Put((byte[])record.Key.Clone(), record_pos.ToBytes());
-            offset += (uint)record_bytes.Length;
+            _indexer.Put(record.Key, record_pos);
         };
-        GC.Collect();
     }
-    public bool put(Span<byte> key, Span<byte> value) 
+    public bool put(byte[] key, byte[] value) 
     {
-        if (key == null || key.IsEmpty)
+        if (key == null || key.Length <=0 )
         {
             throw new ArgumentNullException(nameof(key));
         }
 
+        // 构建一条Log记录
         var record = new LogRecord {
             Type = LogRecordType.NORMAL,
             KeySize = (uint)key.Length,
             ValueSize = (uint)value.Length,
-            Key = key.ToArray(),
-            Value = value.ToArray(),
+            Key = key,
+            Value = value,
+            Crc = 0
         };
 
         //判断当前写入 是否 超过文件最大阈值
-        var record_bytes = record.ToBytesSpan();
-        if (_activeFile.GetOffset() + (UInt64)record_bytes.Length > _options.MaxFileSize)
+        var record_bytes = record.ToBytes();
+        if (_activeFile.GetOffset() + record_bytes.Length > _options.MaxFileSize)
         {
             var options = new DataFileOptions {
                 DirPath = _options.DataDir,
@@ -141,36 +137,46 @@ public class Engine : IDisposable
             _activeFile = new_data_file;
         }
 
-        return _activeFile.WriteLogRecord(record_bytes);
+        var write_result= _activeFile.WriteLogRecord(record_bytes);
+        if (write_result)
+        {
+            // 成功写入磁盘后 ，添加内存索引
+            _indexer.Put(key,new LogRecordPos
+            {
+                FileID = _activeFile.GetFileId(),
+                Offset = _activeFile.GetOffset() - (uint)record_bytes.Length,
+            });
+        }
+        return write_result;
+
     }
-    public Span<byte> Get(Span<byte> key)
+    public byte[]? Get(byte[] key)
     {
-        if (key == null || key.IsEmpty)
+        if (key == null || key.Length <= 0)
         {
             throw new InvalidDataException("key can not be null or empty");
         }
         // 先从内存索引查找数据
-        var record_pos_bytes = _indexer.Get(key);
-        if (record_pos_bytes.IsEmpty)
+        var record_pos = _indexer.Get(key);
+        if (record_pos == null)
         {
-            return Span<byte>.Empty;
+            return null;
         }
 
-        var record_pos = new LogRecordPos(record_pos_bytes);
-        // 如果有数据，再去磁盘查找
+        // 有数据，再去磁盘查找
+        var offset = record_pos.Offset;
         if (record_pos.FileID == _activeFile.GetFileId())
         {
-            return  _activeFile.ReadLogRecord(record_pos.Offset);
+            return  _activeFile.ReadLogRecord(ref offset)?.Value;
         }
 
+        
         var ok=_oldDataFile.TryGetValue(record_pos.FileID,out var data_file);
         if (!ok)
         {
             throw new DataFileNotFoundExeption("datafile not found");
         }
-
-
-        return data_file!.ReadLogRecord(record_pos.Offset);
+        return data_file!.ReadLogRecord(ref offset)?.Value;
 
     }
     public void Dispose()

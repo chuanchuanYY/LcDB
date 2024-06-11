@@ -1,4 +1,5 @@
 ﻿using FriendlyCSharp.Databases;
+using LcDB.Core.data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,19 +13,17 @@ namespace LcDB.Core.index;
 /// </summary>
 public class FcsBTreeIndexer : IndexerInterface
 {
-
-   
-    public bool Delete(Span<byte> key)
+    public bool Delete(byte[] key)
     {
         throw new NotImplementedException();
     }
 
-    public Span<byte> Get(Span<byte> key)
+    public LogRecordPos Get(byte[] key)
     {
         throw new NotImplementedException();
     }
 
-    public bool Put(Span<byte> key, Span<byte> value)
+    public bool Put(byte[] key, LogRecordPos value)
     {
         throw new NotImplementedException();
     }

@@ -14,7 +14,7 @@ public interface IOManagerInterface
     /// <param name="buf">要写入数据</param>
     /// <param name="offset">偏移量</param>
     /// <returns>写入的字节数量 </returns>
-    public ulong Put(Span<byte> buf, ulong offset);
+    public int Put(byte[] buf, uint offset);
 
     /// <summary>
     /// 从偏移量开始读取数据到 buf  
@@ -22,7 +22,7 @@ public interface IOManagerInterface
     /// <param name="buf">接收数据缓冲区</param>
     /// <param name="offset">偏移量</param>
     /// <returns>读取的字节数</returns>
-    public int Get(Span<byte> buf, ulong offset);
+    public int Get(byte[] buf, uint offset);
 
 
     /// <summary>

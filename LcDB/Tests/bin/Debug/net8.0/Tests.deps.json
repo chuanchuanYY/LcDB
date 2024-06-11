@@ -20,6 +20,14 @@
         }
       },
       "coverlet.collector/6.0.0": {},
+      "FriendlyCSharp.Databases/2.0.4": {
+        "runtime": {
+          "lib/netstandard2.0/FriendlyCSharp.Databases.dll": {
+            "assemblyVersion": "2.0.4.0",
+            "fileVersion": "2.0.4.0"
+          }
+        }
+      },
       "Microsoft.CodeCoverage/17.6.0": {
         "runtime": {
           "lib/netcoreapp3.1/Microsoft.VisualStudio.CodeCoverage.Shim.dll": {
@@ -318,6 +326,9 @@
       "NUnit3TestAdapter/4.2.1": {},
       "System.Reflection.Metadata/1.6.0": {},
       "LcDB.Core/1.0.0": {
+        "dependencies": {
+          "FriendlyCSharp.Databases": "2.0.4"
+        },
         "runtime": {
           "LcDB.Core.dll": {}
         }
@@ -336,6 +347,13 @@
       "sha512": "sha512-tW3lsNS+dAEII6YGUX/VMoJjBS1QvsxqJeqLaJXub08y1FSjasFPtQ4UBUsudE9PNrzLjooClMsPtY2cZLdXpQ==",
       "path": "coverlet.collector/6.0.0",
       "hashPath": "coverlet.collector.6.0.0.nupkg.sha512"
+    },
+    "FriendlyCSharp.Databases/2.0.4": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-wzqvSBDfnVFj0K57S0lzlVHGqBbglrzxuuf3E2YbDGQv4AV+HRSAqP0xkNR9+j8Yx8yvOk/0c0nqEs+O8XkNnA==",
+      "path": "friendlycsharp.databases/2.0.4",
+      "hashPath": "friendlycsharp.databases.2.0.4.nupkg.sha512"
     },
     "Microsoft.CodeCoverage/17.6.0": {
       "type": "package",
