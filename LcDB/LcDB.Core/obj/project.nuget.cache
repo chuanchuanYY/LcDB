@@ -1,10 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "P5CB2DeMdz4VusYJCF08erqNxm4/iHOJSKkfFlDCCuNyV9q3G4ZQMlrzpAOwOoUj4wvrlomLGpGKOpDq0pY05w==",
+  "dgSpecHash": "ULfFsfeRi7tSyoYbJ1+I0itLXLhKX5XfqR/9xSlh6bxaZd8w0wlyeaAIaDig96hq7i4QQx2PbsCIAdCxIaTZtw==",
   "success": true,
   "projectFilePath": "D:\\New_D_Net\\编程项目\\KVProject-C#\\LcDB\\LcDB.Core\\LcDB.Core.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\Administrator\\.nuget\\packages\\friendlycsharp.databases\\2.0.4\\friendlycsharp.databases.2.0.4.nupkg.sha512"
+    "C:\\Users\\Administrator\\.nuget\\packages\\crc32.net\\1.2.0\\crc32.net.1.2.0.nupkg.sha512",
+    "C:\\Users\\Administrator\\.nuget\\packages\\friendlycsharp.databases\\2.0.4\\friendlycsharp.databases.2.0.4.nupkg.sha512",
+    "C:\\Users\\Administrator\\.nuget\\packages\\microsoft.netcore.platforms\\1.1.0\\microsoft.netcore.platforms.1.1.0.nupkg.sha512",
+    "C:\\Users\\Administrator\\.nuget\\packages\\netstandard.library\\2.0.0\\netstandard.library.2.0.0.nupkg.sha512"
   ],
   "logs": []
 }

@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("LcDB.Core")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+aeecadd4326656c873922e1b78954ebd0f5e92df")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+07141030cbf37f5d2412fa99d61f5ca88481e7b8")]
 [assembly: System.Reflection.AssemblyProductAttribute("LcDB.Core")]
 [assembly: System.Reflection.AssemblyTitleAttribute("LcDB.Core")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

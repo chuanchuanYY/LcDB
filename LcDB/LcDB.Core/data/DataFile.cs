@@ -56,11 +56,6 @@ namespace LcDB.Core.data
             {
                 return null;
             }
-            // 查看记录的类型是否是已删除
-            if (ByteToLogRecordType(record_head[0]) == LogRecordType.DELETED)
-            {
-                return null;
-            }
 
             // 获取 keysize 和 value size 
             Span<byte> record_head_span = record_head;
@@ -81,8 +76,11 @@ namespace LcDB.Core.data
             return new LogRecord(record_buf);
         }
 
-       
 
+        public void Sync()
+        {
+            _ioManager.Sync();
+        }
         private LogRecordType ByteToLogRecordType(byte b)
           => b switch
           {

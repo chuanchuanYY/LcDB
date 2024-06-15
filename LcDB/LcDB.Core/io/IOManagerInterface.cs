@@ -24,7 +24,10 @@ public interface IOManagerInterface
     /// <returns>读取的字节数</returns>
     public int Get(byte[] buf, uint offset);
 
-
+   /// <summary>
+   /// 将数据从缓冲区写入到文件
+   /// </summary>
+    public void Sync();
     /// <summary>
     /// 提供方法用于关闭IO接口
     /// </summary>

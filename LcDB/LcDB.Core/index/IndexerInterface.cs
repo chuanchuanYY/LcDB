@@ -30,5 +30,11 @@ public interface IndexerInterface
     /// <param name="key"></param>
     /// <returns></returns>
     public bool Delete(byte[] key);
+
+    /// <summary>
+    /// 获取所有的key
+    /// </summary>
+    /// <returns></returns>
+    public List<byte[]> ListKeys();
 }
 

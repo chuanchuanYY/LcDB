@@ -55,6 +55,12 @@ public class DictionaryIndexer : IndexerInterface
         }
         return _index.TryAdd(key,value);
     }
+
+    public List<byte[]> ListKeys()
+    {
+        return _index.Keys.ToList();
+    }
+
 }
 
 public class BytesCompare : IEqualityComparer<byte[]>

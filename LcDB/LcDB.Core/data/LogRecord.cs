@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Force.Crc32;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Intrinsics.Arm;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -53,6 +55,14 @@ public class LogRecord
         Key = from_span.Slice(9,(int)KeySize).ToArray();
         Value = from_span.Slice(9+(int)KeySize, (int)ValueSize).ToArray();
         Crc = BitConverter.ToUInt32(from_span.Slice(9+ (int)KeySize+ (int)ValueSize,4));
+       
+        
+        var _crc  = Crc32Algorithm.Compute(from,0,from.Length - 4);
+        if (_crc != Crc)
+        {
+            throw new InvalidDataException("数据已损坏");
+        }
+
     }
     public static int GetHeadSize()
     {
@@ -68,10 +78,11 @@ public class LogRecord
         AppendToSpan(span, ref offset, BitConverter.GetBytes(ValueSize));
         AppendToSpan(span, ref offset, Key);
         AppendToSpan(span, ref offset, Value);
+        Crc = Crc32Algorithm.Compute(span , 0, span.Length - 4);
         AppendToSpan(span, ref offset, BitConverter.GetBytes(Crc));
-
         return span;
     }
+
     private long GetLogRecordSize()
     {
         var size = GetHeadSize() + KeySize + ValueSize + 4;

@@ -1,10 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "0DIcTss6Bkne2PhBYdExaJMqMwV60zdpoeuCNFoCRyc2iy647tzqolbMytiEsZCES6z82JFQApzgXVS/gffPIw==",
+  "dgSpecHash": "hDpPGrMveiZccWLv0/TH9P3peWjdq8ldqvTlI5QY7t+U02Q6NkiCgnhL7dMxeDwU9W35fUfH+xO9oQo13adiLw==",
   "success": true,
   "projectFilePath": "D:\\New_D_Net\\编程项目\\KVProject-C#\\LcDB\\Tests\\Tests.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Administrator\\.nuget\\packages\\coverlet.collector\\6.0.0\\coverlet.collector.6.0.0.nupkg.sha512",
+    "C:\\Users\\Administrator\\.nuget\\packages\\crc32.net\\1.2.0\\crc32.net.1.2.0.nupkg.sha512",
     "C:\\Users\\Administrator\\.nuget\\packages\\friendlycsharp.databases\\2.0.4\\friendlycsharp.databases.2.0.4.nupkg.sha512",
     "C:\\Users\\Administrator\\.nuget\\packages\\microsoft.codecoverage\\17.6.0\\microsoft.codecoverage.17.6.0.nupkg.sha512",
     "C:\\Users\\Administrator\\.nuget\\packages\\microsoft.net.test.sdk\\17.6.0\\microsoft.net.test.sdk.17.6.0.nupkg.sha512",

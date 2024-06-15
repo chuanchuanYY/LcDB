@@ -101,3 +101,4 @@ D:\New_D_Net\编程项目\KVProject-C#\LcDB\Tests\obj\Debug\net8.0\Tests.pdb
 D:\New_D_Net\编程项目\KVProject-C#\LcDB\Tests\obj\Debug\net8.0\Tests.genruntimeconfig.cache
 D:\New_D_Net\编程项目\KVProject-C#\LcDB\Tests\obj\Debug\net8.0\ref\Tests.dll
 D:\New_D_Net\编程项目\KVProject-C#\LcDB\Tests\bin\Debug\net8.0\FriendlyCSharp.Databases.dll
+D:\New_D_Net\编程项目\KVProject-C#\LcDB\Tests\bin\Debug\net8.0\Crc32.NET.dll

@@ -3,6 +3,7 @@ using LcDB.Core.index;
 using LcDB.Core.io;
 using LcDB.Core.options;
 using System;
+using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace LcDB.Core.db;
 
-public class Engine : IDisposable
+public class Engine : IDisposable 
 {
     private IndexerInterface _indexer;
     private DataFile _activeFile;
@@ -26,7 +27,8 @@ public class Engine : IDisposable
             case IndexerType.Dictionary:
                 _indexer = new DictionaryIndexer();
                 break;
-            default : _indexer = new DictionaryIndexer(); break;
+            default : _indexer = new DictionaryIndexer();
+                break;
         }
         _oldDataFile = new ConcurrentDictionary<uint,DataFile>();
         Load_DataFile();
@@ -100,6 +102,16 @@ public class Engine : IDisposable
             {
                 break; // 读取完文件了
             }
+
+            // 查看LogRecord的类型是否是Delete
+            if (record.Type == LogRecordType.DELETED)
+            {
+                // 如果是delete 继续读取下一条数据，不添加到内存索引
+                //删除内存索引，如果有
+                _indexer.Delete(record.Key);
+                continue;
+            }
+            
             var record_pos = new LogRecordPos
             {
                 FileID = dataFile.GetFileId(),
@@ -122,14 +134,18 @@ public class Engine : IDisposable
             ValueSize = (uint)value.Length,
             Key = key,
             Value = value,
-            Crc = 0
         };
 
+        return AppendRecord(record);
+    }
+    private bool AppendRecord(LogRecord record)
+    {
         //判断当前写入 是否 超过文件最大阈值
         var record_bytes = record.ToBytes();
         if (_activeFile.GetOffset() + record_bytes.Length > _options.MaxFileSize)
         {
-            var options = new DataFileOptions {
+            var options = new DataFileOptions
+            {
                 DirPath = _options.DataDir,
             };
             var new_data_file = new DataFile(options, _activeFile.GetFileId() + 1);
@@ -137,18 +153,17 @@ public class Engine : IDisposable
             _activeFile = new_data_file;
         }
 
-        var write_result= _activeFile.WriteLogRecord(record_bytes);
+        var write_result = _activeFile.WriteLogRecord(record_bytes);
         if (write_result)
         {
             // 成功写入磁盘后 ，添加内存索引
-            _indexer.Put(key,new LogRecordPos
+            _indexer.Put(record.Key, new LogRecordPos
             {
                 FileID = _activeFile.GetFileId(),
                 Offset = _activeFile.GetOffset() - (uint)record_bytes.Length,
             });
         }
         return write_result;
-
     }
     public byte[]? Get(byte[] key)
     {
@@ -179,6 +194,98 @@ public class Engine : IDisposable
         return data_file!.ReadLogRecord(ref offset)?.Value;
 
     }
+
+    /// <summary>
+    /// 根据Key 删除一条记录
+    /// </summary>
+    /// <param name="key"></param>
+    /// <returns></returns>
+    public bool Delete(byte[] key)
+    {
+        if (key == null || key.Length == 0)
+        {
+            throw new ArgumentNullException("key can not be null");
+        }
+
+        // 先在内存索引查看是否存在 记录
+        if (_indexer.Get(key) == null)
+        {
+            return false;
+        }
+
+        // 先写入数据文件，表示记录为以删除
+        // 构建一条Log记录
+        var record = new LogRecord
+        {
+            Type = LogRecordType.DELETED,// 设为Delete 类型
+            KeySize = (uint)key.Length,
+            ValueSize = 0,
+            Key = key,
+            Value = new byte[0],
+        };
+        // 追加写入 数据文件
+        var append_result = AppendRecord(record);
+        if (!append_result)
+        {
+            return false;
+        }
+
+        // 删除内存索引记录
+        return _indexer.Delete(key);
+    }
+
+
+    /// <summary>
+    ///  将数据从缓冲区同步到物理存储
+    /// </summary>
+    public void Sync()
+    {
+       _activeFile.Sync();
+    }
+
+    /// <summary>
+    /// 获取所有的key
+    /// </summary>
+    /// <returns></returns>
+    public List<byte[]> ListKeys()
+    {
+        return _indexer.ListKeys();
+    }
+
+    /// <summary>
+    /// 获取迭代器
+    /// </summary>
+    public Iterator Iter() { 
+        
+        var items = new List<(byte[]?, byte[]?)>();
+        var keys = _indexer.ListKeys();
+        foreach ( var key in keys)
+        {
+            var value =this.Get(key);
+            items.Add((key,value));
+        }
+
+        return  new Iterator(items!);
+    }
+
+    /// <summary>
+    /// 遍历所有数据，执行委托。结束遍历，如果委托返回false
+    /// </summary>
+    /// <param name="fn">参数1是key ，参数2是value</param>
+    public void Fold(Func<byte[], byte[],bool> fn) 
+    {
+        var iter = this.Iter();
+        foreach (var(key,value) in iter)
+        {
+            var result =fn?.Invoke(key,value);
+            if (result == false)
+            {
+                return;
+            }
+        }
+    }
+
+    
     public void Dispose()
     {
         _activeFile.Dispose();
@@ -190,6 +297,6 @@ public class Engine : IDisposable
         _options = null;
     }
 
-
+     
 
 }

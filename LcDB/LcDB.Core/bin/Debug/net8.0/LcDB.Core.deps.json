@@ -8,10 +8,22 @@
     ".NETCoreApp,Version=v8.0": {
       "LcDB.Core/1.0.0": {
         "dependencies": {
+          "Crc32.NET": "1.2.0",
           "FriendlyCSharp.Databases": "2.0.4"
         },
         "runtime": {
           "LcDB.Core.dll": {}
+        }
+      },
+      "Crc32.NET/1.2.0": {
+        "dependencies": {
+          "NETStandard.Library": "2.0.0"
+        },
+        "runtime": {
+          "lib/netstandard2.0/Crc32.NET.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.2.0.5"
+          }
         }
       },
       "FriendlyCSharp.Databases/2.0.4": {
@@ -20,6 +32,12 @@
             "assemblyVersion": "2.0.4.0",
             "fileVersion": "2.0.4.0"
           }
+        }
+      },
+      "Microsoft.NETCore.Platforms/1.1.0": {},
+      "NETStandard.Library/2.0.0": {
+        "dependencies": {
+          "Microsoft.NETCore.Platforms": "1.1.0"
         }
       }
     }
@@ -30,12 +48,33 @@
       "serviceable": false,
       "sha512": ""
     },
+    "Crc32.NET/1.2.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-wNW/huzolu8MNKUnwCVKxjfAlCFpeI8AZVfF46iAWJ1+P6bTU1AZct7VAkDDEjgeeTJCVTkGZaD6jSd/fOiUkA==",
+      "path": "crc32.net/1.2.0",
+      "hashPath": "crc32.net.1.2.0.nupkg.sha512"
+    },
     "FriendlyCSharp.Databases/2.0.4": {
       "type": "package",
       "serviceable": true,
       "sha512": "sha512-wzqvSBDfnVFj0K57S0lzlVHGqBbglrzxuuf3E2YbDGQv4AV+HRSAqP0xkNR9+j8Yx8yvOk/0c0nqEs+O8XkNnA==",
       "path": "friendlycsharp.databases/2.0.4",
       "hashPath": "friendlycsharp.databases.2.0.4.nupkg.sha512"
+    },
+    "Microsoft.NETCore.Platforms/1.1.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-kz0PEW2lhqygehI/d6XsPCQzD7ff7gUJaVGPVETX611eadGsA3A877GdSlU0LRVMCTH/+P3o2iDTak+S08V2+A==",
+      "path": "microsoft.netcore.platforms/1.1.0",
+      "hashPath": "microsoft.netcore.platforms.1.1.0.nupkg.sha512"
+    },
+    "NETStandard.Library/2.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-7jnbRU+L08FXKMxqUflxEXtVymWvNOrS8yHgu9s6EM8Anr6T/wIX4nZ08j/u3Asz+tCufp3YVwFSEvFTPYmBPA==",
+      "path": "netstandard.library/2.0.0",
+      "hashPath": "netstandard.library.2.0.0.nupkg.sha512"
     }
   }
 }

@@ -83,5 +83,10 @@ namespace LcDB.Core.io
         {
             Dispose();
         }
+
+        public void Sync()
+        {
+            _stream.Flush();
+        }
     }
 }

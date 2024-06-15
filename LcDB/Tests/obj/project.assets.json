@@ -8,6 +8,22 @@
           "build/netstandard1.0/coverlet.collector.targets": {}
         }
       },
+      "Crc32.NET/1.2.0": {
+        "type": "package",
+        "dependencies": {
+          "NETStandard.Library": "2.0.0"
+        },
+        "compile": {
+          "lib/netstandard2.0/Crc32.NET.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.0/Crc32.NET.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "FriendlyCSharp.Databases/2.0.4": {
         "type": "package",
         "compile": {
@@ -395,6 +411,7 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v8.0",
         "dependencies": {
+          "Crc32.NET": "1.2.0",
           "FriendlyCSharp.Databases": "2.0.4"
         },
         "compile": {
@@ -458,6 +475,23 @@
         "coverlet-icon.png",
         "coverlet.collector.6.0.0.nupkg.sha512",
         "coverlet.collector.nuspec"
+      ]
+    },
+    "Crc32.NET/1.2.0": {
+      "sha512": "wNW/huzolu8MNKUnwCVKxjfAlCFpeI8AZVfF46iAWJ1+P6bTU1AZct7VAkDDEjgeeTJCVTkGZaD6jSd/fOiUkA==",
+      "type": "package",
+      "path": "crc32.net/1.2.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "crc32.net.1.2.0.nupkg.sha512",
+        "crc32.net.nuspec",
+        "lib/net20/Crc32.NET.dll",
+        "lib/net20/Crc32.NET.xml",
+        "lib/netstandard1.3/Crc32.NET.dll",
+        "lib/netstandard1.3/Crc32.NET.xml",
+        "lib/netstandard2.0/Crc32.NET.dll",
+        "lib/netstandard2.0/Crc32.NET.xml"
       ]
     },
     "FriendlyCSharp.Databases/2.0.4": {

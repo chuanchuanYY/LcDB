@@ -23,6 +23,11 @@ public class FcsBTreeIndexer : IndexerInterface
         throw new NotImplementedException();
     }
 
+    public List<byte[]> ListKeys()
+    {
+        throw new NotImplementedException();
+    }
+
     public bool Put(byte[] key, LogRecordPos value)
     {
         throw new NotImplementedException();
