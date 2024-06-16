@@ -93,6 +93,7 @@ namespace Tests.db
                 DataDir = path,
                 IndexerType = IndexerType.Dictionary,
                 MaxFileSize = 1 * 1024 * 1024,
+                
             };
             var engine = new Engine(option);
 

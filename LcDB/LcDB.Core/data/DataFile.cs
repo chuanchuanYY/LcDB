@@ -12,6 +12,8 @@ namespace LcDB.Core.data
     {
          
         private IOManagerInterface _ioManager;
+        static ReaderWriterLock rwl = new ReaderWriterLock();
+
         public DataFile(DataFileOptions options ,uint file_id)
         {
             var path =Path.Combine(options.DirPath, file_id.ToString() + ".data");
@@ -19,6 +21,7 @@ namespace LcDB.Core.data
             _fileId = file_id;
             _offset = 0;
         }
+
         private uint _fileId;
         /// <summary>
         /// 文件操作的偏移量 ，表示从 偏移量 _offset 开始写数据
@@ -34,7 +37,17 @@ namespace LcDB.Core.data
         /// <param name="logRecord"></param>
         public bool WriteLogRecord(byte[] log_record)
         {
+            try
+            {
+                rwl.AcquireWriterLock(1_000);
+            }
+            catch (ApplicationException)
+            {
+
+                return false;
+            }
             _offset += (uint)_ioManager.Put(log_record, _offset);
+            rwl.ReleaseWriterLock();
             return true;
         }
 
@@ -50,6 +63,15 @@ namespace LcDB.Core.data
         /// +-----------+-----------+-----------+-----------+-----------+
         public LogRecord? ReadLogRecord(ref uint offset)
         {
+            try
+            {
+                rwl.AcquireWriterLock(1_000);
+            }
+            catch (ApplicationException )
+            {
+                return null;
+            }
+
             //先读取固定长度head 的数据
             var record_head =new byte[LogRecord.GetHeadSize()];
             if (_ioManager.Get(record_head, offset) <= 0 )
@@ -63,7 +85,7 @@ namespace LcDB.Core.data
             var value_size = BitConverter.ToUInt32(record_head_span.Slice(5,4));
 
             var record_buf =  new byte[LogRecord.GetHeadSize() 
-                + key_size + value_size + 4];
+                + key_size + value_size + 4 + 4];
               var read_count = _ioManager.Get(record_buf, offset);
             if (read_count <= 0)
             {
@@ -73,6 +95,7 @@ namespace LcDB.Core.data
 
             // 解码 将字节数组 解析为 记录 LogRecord
             offset += (uint)record_buf.Length;
+            rwl.ReleaseWriterLock();
             return new LogRecord(record_buf);
         }
 

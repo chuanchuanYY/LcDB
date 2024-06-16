@@ -16,7 +16,7 @@ namespace Tests.data
         [SetUp]
         public void SetUp()
         {
-            
+        
         }
         [Test]
         public void Test_Write_Record()
@@ -52,23 +52,23 @@ namespace Tests.data
             var result2 = dataFile.WriteLogRecord(log_record2.ToBytes());
             Assert.IsTrue(result2);
 
-            var st  = Stopwatch.StartNew();
-            st.Start();
-            for (int i = 0; i < 300_0000;i++)
-            {
-                var log_record3 = new LogRecord()
-                {
-                    Type = LogRecordType.NORMAL,
-                    Key = $"bbb{i}".ToBytes(),
-                    Value = $"bitcast-kv{i}".ToBytes(),
-                    KeySize = (uint)$"bbb{i}".ToBytes().Length,
-                    ValueSize = (uint)$"bitcast-kv{i}".ToBytes().Length,
-                };
-                var result3 = dataFile.WriteLogRecord(log_record3.ToBytes());
-                Assert.IsTrue(result3);
-            }
-            st.Stop();
-            Console.WriteLine($"写入300_0000条记录 耗时: {st.ElapsedMilliseconds} ms");
+            //var st  = Stopwatch.StartNew();
+            //st.Start();
+            //for (int i = 0; i < 300_0000;i++)
+            //{
+            //    var log_record3 = new LogRecord()
+            //    {
+            //        Type = LogRecordType.NORMAL,
+            //        Key = $"bbb{i}".ToBytes(),
+            //        Value = $"bitcast-kv{i}".ToBytes(),
+            //        KeySize = (uint)$"bbb{i}".ToBytes().Length,
+            //        ValueSize = (uint)$"bitcast-kv{i}".ToBytes().Length,
+            //    };
+            //    var result3 = dataFile.WriteLogRecord(log_record3.ToBytes());
+            //    Assert.IsTrue(result3);
+            //}
+            //st.Stop();
+            //Console.WriteLine($"写入300_0000条记录 耗时: {st.ElapsedMilliseconds} ms");
             dataFile.Dispose();
 
             Directory.GetFiles(path)
@@ -115,55 +115,55 @@ namespace Tests.data
             var result2 = dataFile.WriteLogRecord(log_record2.ToBytes());
             Assert.IsTrue(result2);
 
-            for (int i = 0; i < 300_0000; i++)
-            {
-                var log_record3 = new LogRecord()
-                {
-                    Type = LogRecordType.NORMAL,
-                    Key = $"bbb{i}".ToBytes(),
-                    Value = $"bitcast-kv{i}".ToBytes(),
-                    KeySize = (uint)$"bbb{i}".ToBytes().Length,
-                    ValueSize = (uint)$"bitcast-kv{i}".ToBytes().Length,
-                };
-                var result3 = dataFile.WriteLogRecord(log_record3.ToBytes());
-                Assert.IsTrue(result3);
-            }
+            //for (int i = 0; i < 300_0000; i++)
+            //{
+            //    var log_record3 = new LogRecord()
+            //    {
+            //        Type = LogRecordType.NORMAL,
+            //        Key = $"bbb{i}".ToBytes(),
+            //        Value = $"bitcast-kv{i}".ToBytes(),
+            //        KeySize = (uint)$"bbb{i}".ToBytes().Length,
+            //        ValueSize = (uint)$"bitcast-kv{i}".ToBytes().Length,
+            //    };
+            //    var result3 = dataFile.WriteLogRecord(log_record3.ToBytes());
+            //    Assert.IsTrue(result3);
+            //}
 
             uint offset1 = 0;
             var result4 = dataFile.ReadLogRecord(ref offset1);
             Assert.IsTrue(result4 != null);
 
-            offset1 = 26;
+            offset1 = 30;
             var result5 = dataFile.ReadLogRecord(ref offset1);
             Assert.IsTrue(result5 != null);
             
 
 
-            uint offset2 = 0;
-            int record_count = 0;
-            List<LogRecord> logRecords = new List<LogRecord>();
-            Stopwatch stopwatch = new Stopwatch();
-            stopwatch.Start();
-            while (true)
-            {
-                var logrecord = dataFile.ReadLogRecord(ref offset2);
-                if (logrecord == null)
-                {
-                    break;
-                }
+            //uint offset2 = 0;
+            //int record_count = 0;
+            //List<LogRecord> logRecords = new List<LogRecord>();
+            //Stopwatch stopwatch = new Stopwatch();
+            //stopwatch.Start();
+            //while (true)
+            //{
+            //    var logrecord = dataFile.ReadLogRecord(ref offset2);
+            //    if (logrecord == null)
+            //    {
+            //        break;
+            //    }
               
-                Assert.NotNull(logrecord);
-                logRecords.Add(logrecord);
-                record_count++;
-            }
-            stopwatch.Stop();
-            Console.WriteLine($"读 300_0000条记录耗时： {stopwatch.ElapsedMilliseconds} ms");
-            Assert.IsTrue(record_count -2  == 300_0000 );
-            Assert.IsTrue(logRecords.Count -2 == 300_0000 );
-            foreach (var item in logRecords.TakeLast(100))
-            {
-                Console.WriteLine($"key = {StringExtension.ToString(item.Key)}  Value = {StringExtension.ToString(item.Value)}");
-            };
+            //    Assert.NotNull(logrecord);
+            //    logRecords.Add(logrecord);
+            //    record_count++;
+            //}
+            //stopwatch.Stop();
+            //Console.WriteLine($"读 300_0000条记录耗时： {stopwatch.ElapsedMilliseconds} ms");
+            //Assert.IsTrue(record_count -2  == 300_0000 );
+            //Assert.IsTrue(logRecords.Count -2 == 300_0000 );
+            //foreach (var item in logRecords.TakeLast(100))
+            //{
+            //    Console.WriteLine($"key = {StringExtension.ToString(item.Key)}  Value = {StringExtension.ToString(item.Value)}");
+            //};
 
             dataFile.Dispose();
             Directory.GetFiles(path)

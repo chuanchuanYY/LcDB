@@ -11,7 +11,7 @@ namespace LcDB.Core.index;
 /// <summary>
 ///  先使用第三方BTree 实现
 /// </summary>
-public class FcsBTreeIndexer : IndexerInterface
+public class FcsBTreeIndexer 
 {
     public bool Delete(byte[] key)
     {

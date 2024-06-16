@@ -26,7 +26,6 @@ namespace LcDB.Core.io
         }
         private FileStream _stream;
 
-       
 
         /// <summary>
         /// 从偏移量开始，读取 buf.Length 个字节 到buf

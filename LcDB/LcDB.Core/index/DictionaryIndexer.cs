@@ -1,4 +1,5 @@
-﻿using LcDB.Core.data;
+﻿using LcDB.Core.common;
+using LcDB.Core.data;
 using System;
 using System.Collections;
 using System.Collections.Concurrent;
@@ -18,7 +19,7 @@ public class DictionaryIndexer : IndexerInterface
 {
     public DictionaryIndexer()
     {
-        _index = new ConcurrentDictionary<byte[],LogRecordPos>(new BytesCompare());
+        _index = new ConcurrentDictionary<byte[],LogRecordPos>(new BytesEqualityComparer());
     }
 
     private ConcurrentDictionary<byte[], LogRecordPos> _index;
@@ -49,7 +50,7 @@ public class DictionaryIndexer : IndexerInterface
 
     public bool Put(byte[] key,LogRecordPos value)
     {
-        if (key == null || key== null || key.Length <= 0)
+        if (key == null || key.Length <= 0)
         {
             throw new ArgumentNullException(nameof(key));
         }
@@ -61,38 +62,13 @@ public class DictionaryIndexer : IndexerInterface
         return _index.Keys.ToList();
     }
 
-}
-
-public class BytesCompare : IEqualityComparer<byte[]>
-{
-    //public override bool Equals(byte[]? x, byte[]? y)
-    //{
-    //    //if (x == null || y == null || x.Length != y.Length)
-    //    //{
-    //    //    return false;
-    //    //}
-    //    //for (int i = 0; i < x.Length; i++)
-    //    //{
-    //    //    if (x[i] != y[i])
-    //    //    {
-    //    //        return false;
-    //    //    }
-    //    //}
-    //    //return true;
-
-    //    return StructuralComparisons.StructuralEqualityComparer.Equals(x,y);
-    //}
-    //public override int GetHashCode([DisallowNull] byte[]? obj)
-    //{
-    //    return StructuralComparisons.StructuralEqualityComparer.GetHashCode(obj);
-    //}
-    public bool Equals(byte[]? x, byte[]? y)
+    public bool Update(byte[] key, LogRecordPos value)
     {
-        return StructuralComparisons.StructuralEqualityComparer.Equals(x,y);
-    }
-
-    public int GetHashCode([DisallowNull] byte[] obj)
-    {
-        return StructuralComparisons.StructuralEqualityComparer.GetHashCode(obj);
+        var result = _index.AddOrUpdate(key,value,(old_key,old_value)=>value);
+        if (result == null)
+        {
+            return false;
+        }
+        return true;
     }
 }
